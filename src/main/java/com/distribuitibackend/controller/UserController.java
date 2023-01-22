@@ -16,35 +16,37 @@ public class UserController
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> creaUtente(@RequestBody User u)
+    public ResponseEntity<User> creaUtente(@RequestBody User u)
     {   try
-    {   userService.registrazione(u);
-        return new ResponseEntity("200", HttpStatus.OK);
-    }catch(RuntimeException e)
-    {   return new ResponseEntity("User already exists!", HttpStatus.BAD_REQUEST);
-    }
+        {   userService.registrazione(u);
+            return new ResponseEntity("200", HttpStatus.OK);
+        }catch(RuntimeException e)
+        {   return new ResponseEntity("User already exists!", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping("/getEmail")
-    public ResponseEntity<User> getEmailUtente(@RequestParam String email)
+    @GetMapping("/getEmail/{email}")
+    public ResponseEntity<User> getEmailUtente(@PathVariable String email)
     {   try
-    {   if(!userService.esisteUtente(email))
-        return new ResponseEntity("Email non esistente!", HttpStatus.BAD_REQUEST);
-    }catch (RuntimeException e)
-    {   User u = userService.getUtente(email);
-        return new ResponseEntity(u, HttpStatus.OK);
-    }
+        {   if(!userService.esisteUtente(email))
+                return new ResponseEntity("Email non esistente!", HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException e)
+        {   User u = userService.getUtente(email);
+            return new ResponseEntity(u, HttpStatus.OK);
+        }
         return null;
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody User u)
+    @GetMapping("/login/{u}&{pass}")
+    public ResponseEntity<Boolean> login(@PathVariable String u, @PathVariable double pass)
     {   try
-    {   if(userService.login(u));
-        return new ResponseEntity(true, HttpStatus.BAD_REQUEST);
-    }catch (RuntimeException e)
-    {   return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
-    }
+        {   if(userService.login(u,pass));
+            {
+                return new ResponseEntity(true, HttpStatus.OK);
+            }
+        }catch (RuntimeException e)
+        {   return new ResponseEntity("false porco dio", HttpStatus.BAD_REQUEST);
+        }
     }
 }
 

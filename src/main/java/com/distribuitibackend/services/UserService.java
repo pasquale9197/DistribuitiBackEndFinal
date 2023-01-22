@@ -44,17 +44,21 @@ public class UserService
     }
 
     @Transactional(readOnly = true)
-    public boolean login(User u)
-    {   if(userRepository.existsByEmail(u.getEmail()) || userRepository.existsByNomeutente(u.getNomeutente()))
-    {   if(userRepository.existsByPassword(u.getPassword()))
-        return true;
-    }
-        throw new RuntimeException("User doesn't exists");
+    public boolean login(String nomeutente, double pass)
+    {   User u = userRepository.findByNomeutente(nomeutente);
+        if(userRepository.existsByEmail(u.getEmail()) || userRepository.existsByNomeutente(u.getNomeutente()))
+        {   System.out.println("CI SONO");
+            if(u.getPassword() == pass)
+            {   System.out.println("CI SONO");
+                return true;
+            }
+        }
+        return false;
     }
 
 
     @Transactional(readOnly = false)
-    public void registrazione(String nome, String cognome, String email, String password, String nomeutente)
+    public void registrazione(String nome, String cognome, String email, int password, String nomeutente)
     {   if(userRepository.existsByEmail(email))
         throw new RuntimeException("Email non disponibile");
         if(userRepository.existsByNomeutente(nomeutente))

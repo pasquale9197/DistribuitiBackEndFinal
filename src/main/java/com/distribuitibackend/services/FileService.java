@@ -110,17 +110,19 @@ public class FileService
     }
 
     @Transactional(readOnly = false)
-    public void aggiungiPreferito(User u, File f)
+    public void aggiungiPreferito(String u, File f)
     {   List<User> list = fileRepository.findById(f.getId()).getListaUser();
-        list.add(u);
+        if(!userRepository.existsByNomeutente(u))
+            throw new RuntimeException("User non esistente");
+        list.add(userRepository.findByNomeutente(u));
         fileRepository.findById(f.getId()).setListaUser(list);
         fileRepository.saveAndFlush(f);
     }
 
     @Transactional(readOnly = false)
-    public void rimuoviPreferito(User u, File f)
+    public void rimuoviPreferito(String u, File f)
     {   List<User> list = fileRepository.findById(f.getId()).getListaUser();
-        list.remove(u);
+        list.remove(userRepository.findByNomeutente(u));
         fileRepository.findById(f.getId()).setListaUser(list);
         fileRepository.saveAndFlush(f);
     }

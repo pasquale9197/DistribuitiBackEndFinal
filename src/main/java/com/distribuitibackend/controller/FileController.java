@@ -28,7 +28,7 @@ public class FileController
     }
     }
 
-    @GetMapping("/filePreferiti")
+    @PostMapping("/filePreferiti")
     public ResponseEntity<List<File>> getAllPreferiti(@RequestBody File file)
     {   try
     {
@@ -39,7 +39,7 @@ public class FileController
     }
 
     @GetMapping("/filePerTipo")
-    public ResponseEntity<List<File>> trovaFilePerTipo(@RequestParam String string)
+    public ResponseEntity<List<File>> trovaFilePerTipo(@PathVariable String string)
     {   try
     {
         return new ResponseEntity(fileService.trovaFilePerTipo(string), HttpStatus.OK);
@@ -50,7 +50,7 @@ public class FileController
     }
 
     @GetMapping("/filePerTitolo")
-    public ResponseEntity<List<File>> trovaFilePerTitolo(@RequestParam String string)
+    public ResponseEntity<List<File>> trovaFilePerTitolo(@PathVariable String string)
     {   try
     {
         return new ResponseEntity(fileService.trovaFilePerTitolo(string), HttpStatus.OK);
@@ -73,9 +73,9 @@ public class FileController
 
 
     @PostMapping("/aggiungiPreferito")
-    public ResponseEntity<String> aggiungiPreferito(@RequestBody File file, @RequestBody User user)
+    public ResponseEntity<String> aggiungiPreferito(@RequestBody File file, @PathVariable String username)
     {   try
-    {   fileService.aggiungiPreferito(user, file);
+    {   fileService.aggiungiPreferito(username, file);
         return new ResponseEntity<String>("File aggiunto con successo ai preferiti", HttpStatus.OK);
     }catch(RuntimeException e)
     {   return new ResponseEntity<String>("File non aggiunto", HttpStatus.BAD_REQUEST);
@@ -83,7 +83,7 @@ public class FileController
     }
 
     @PostMapping("/rimuoviPreferito")
-    public ResponseEntity<String> rimuoviPreferito(@RequestBody File file, @RequestBody User user)
+    public ResponseEntity<String> rimuoviPreferito(@RequestBody File file, @PathVariable String user)
     {   try
     {   fileService.rimuoviPreferito(user, file);
         return new ResponseEntity<String>("FIle rimosso con successo", HttpStatus.OK);

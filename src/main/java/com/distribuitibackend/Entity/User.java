@@ -32,7 +32,7 @@ public class User implements Serializable
 
     @Basic
     @Column(name = "password")
-    private String password;
+    private double password;
 
     @Basic
     @Column(name = "nomeutente")
@@ -89,11 +89,11 @@ public class User implements Serializable
         this.email = email;
     }
 
-    public String getPassword() {
+    public double getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(double password) {
         this.password = password;
     }
 
@@ -113,7 +113,7 @@ public class User implements Serializable
     {   return this.superuser;
     }
 
-    public User(String nome, String cognome, String email, String password, String nomeutente, boolean superuser) {
+    public User(String nome, String cognome, String email, int password, String nomeutente, boolean superuser) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
