@@ -21,76 +21,55 @@ public class FileController
     @GetMapping("/tuttiFile")
     public ResponseEntity<List<File>> getAllFile()
     {   try
-    {   return new ResponseEntity(fileService.listaFile(), HttpStatus.OK);
-    }catch (RuntimeException e)
-    {
-        return new ResponseEntity("Empty list", HttpStatus.BAD_REQUEST);
-    }
+        {   return new ResponseEntity(fileService.listaFile(), HttpStatus.OK);
+        }catch (RuntimeException e)
+        {
+            return new ResponseEntity("Empty list", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/filePreferiti")
-    public ResponseEntity<List<File>> getAllPreferiti(@RequestBody File file)
+    @GetMapping("/filePreferiti/{username}")
+    public ResponseEntity<List<File>> getAllPreferiti(@PathVariable String username)
     {   try
-    {
-        return new ResponseEntity(fileService.listaPreferiti(file), HttpStatus.OK);
-    }catch (RuntimeException e)
-    {   return new ResponseEntity("Empty List", HttpStatus.BAD_REQUEST);
-    }
+        {   return new ResponseEntity(fileService.listaPreferiti(username), HttpStatus.OK);
+        }catch (RuntimeException e)
+        {   return new ResponseEntity("Empty List", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping("/filePerTipo")
+    @GetMapping("/filePerTipo/{string}")
     public ResponseEntity<List<File>> trovaFilePerTipo(@PathVariable String string)
     {   try
-    {
-        return new ResponseEntity(fileService.trovaFilePerTipo(string), HttpStatus.OK);
-    }catch (RuntimeException e)
-    {
-        return new ResponseEntity("FIle non esistente", HttpStatus.BAD_REQUEST);
-    }
+        {
+            return new ResponseEntity(fileService.trovaFilePerTipo(string), HttpStatus.OK);
+        }catch (RuntimeException e)
+        {
+            return new ResponseEntity("FIle non esistente", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping("/filePerTitolo")
+    @GetMapping("/filePerTitolo/{string}")
     public ResponseEntity<List<File>> trovaFilePerTitolo(@PathVariable String string)
     {   try
-    {
-        return new ResponseEntity(fileService.trovaFilePerTitolo(string), HttpStatus.OK);
-    }catch (RuntimeException e)
-    {
-        return new ResponseEntity("FIle non esistente", HttpStatus.BAD_REQUEST);
-    }
+        {
+            return new ResponseEntity(fileService.trovaFilePerTitolo(string), HttpStatus.OK);
+        }catch (RuntimeException e)
+        {
+            return new ResponseEntity("FIle non esistente", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/aggiungiFile")
     public ResponseEntity<String> aggiungiFile(@RequestBody File file)
     {   try
-    {   fileService.aggiungiFile(file);
-        return new ResponseEntity("File aggiunto", HttpStatus.OK);
-    }catch(RuntimeException e)
-    {
-        return  new ResponseEntity("Qualcosa è andato storto", HttpStatus.BAD_REQUEST);
-    }
-    }
-
-
-    @PostMapping("/aggiungiPreferito")
-    public ResponseEntity<String> aggiungiPreferito(@RequestBody File file, @PathVariable String username)
-    {   try
-    {   fileService.aggiungiPreferito(username, file);
-        return new ResponseEntity<String>("File aggiunto con successo ai preferiti", HttpStatus.OK);
-    }catch(RuntimeException e)
-    {   return new ResponseEntity<String>("File non aggiunto", HttpStatus.BAD_REQUEST);
-    }
+        {   fileService.aggiungiFile(file);
+            return new ResponseEntity("File aggiunto", HttpStatus.OK);
+        }catch(RuntimeException e)
+        {
+            return  new ResponseEntity("Qualcosa è andato storto", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/rimuoviPreferito")
-    public ResponseEntity<String> rimuoviPreferito(@RequestBody File file, @PathVariable String user)
-    {   try
-    {   fileService.rimuoviPreferito(user, file);
-        return new ResponseEntity<String>("FIle rimosso con successo", HttpStatus.OK);
-    }catch(RuntimeException e)
-    {
-        return new ResponseEntity<String>("Qualcosa è andato storto", HttpStatus.BAD_REQUEST);
-    }
-    }
+
 }
 

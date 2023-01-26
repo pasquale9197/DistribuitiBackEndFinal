@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface FileIndicizzatiRepository<T extends File> extends JpaRepository<T, Long>
 {
+    boolean existsById(long id);
     boolean existsByTypefile(String type);
     boolean existsByTitolo(String titolo);
     List<File> findByTitolo(String titolo);

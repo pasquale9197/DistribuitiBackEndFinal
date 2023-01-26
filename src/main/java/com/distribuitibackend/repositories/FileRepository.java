@@ -8,10 +8,11 @@ import java.util.List;
 
 public interface FileRepository<T extends File> extends JpaRepository<T, Long>
 {
+    boolean existsById(long id);
     boolean existsByTypefile(String type);
     boolean existsByTitolo(String titolo);
     List<File> findByTitolo(String titolo);
-    File findByTypefile(String type);
+    List<File> findByTypefile(String type);
 
     File findById(long id);
 

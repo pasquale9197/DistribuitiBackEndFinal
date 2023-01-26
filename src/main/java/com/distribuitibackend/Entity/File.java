@@ -23,9 +23,9 @@ public class File
     @Column(name = "typefile")
     private String typefile;
 
-    @Basic
+    @Lob
     @Column(name = "file")
-    private String file;
+    private byte[] file;
 
     @Basic
     @Column(name = "titolo")
@@ -38,6 +38,19 @@ public class File
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user_preferito")
     private List<User> listaUser;
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "id=" + id +
+                ", id_user=" + id_user +
+                ", typefile='" + typefile + '\'' +
+                ", file='" + file + '\'' +
+                ", titolo='" + titolo + '\'' +
+                ", descrizione='" + descrizione + '\'' +
+                ", listaUser=" + listaUser +
+                '}';
+    }
 
     public long getId() {
         return id;
@@ -92,11 +105,11 @@ public class File
         this.typefile = typefile;
     }
 
-    public String getFile() {
+    public byte[] getFile() {
         return file;
     }
 
-    public void setFile(String file) {
+    public void setFile(byte[] file) {
         this.file = file;
     }
 
@@ -116,7 +129,7 @@ public class File
         this.descrizione = descrizione;
     }
 
-    public File(User id_user, String typefile, String file, String titolo, String descrizione) {
+    public File(User id_user, String typefile, byte[] file, String titolo, String descrizione) {
         this.id = id;
         this.id_user = id_user;
         this.typefile = typefile;
@@ -125,7 +138,7 @@ public class File
         this.descrizione = descrizione;
     }
 
-    public File(User id_user, String typefile, String file, String titolo)
+    public File(User id_user, String typefile, byte[] file, String titolo)
     {   this.id = id;
         this.id_user = id_user;
         this.typefile = typefile;

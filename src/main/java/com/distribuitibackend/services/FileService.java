@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FileService
-{
+public class FileService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -23,49 +22,50 @@ public class FileService
     private FileIndicizzatiRepository fileIndicizzatiRepository;
 
     @Transactional(readOnly = true)
-    public List<File> listaFile()
-    {   if(userRepository.findAll().size() == 0)
-        throw new RuntimeException("Empty list");
+    public List<File> listaFile() {
+        if (userRepository.findAll().size() == 0)
+            throw new RuntimeException("Empty list");
         return fileRepository.findAll();
     }
 
     @Transactional(readOnly = false)
-    public void aggiungiFile(File file)
-    {   fileRepository.saveAndFlush(file);
+    public void aggiungiFile(File file) {
+        fileRepository.saveAndFlush(file);
 
     }
 
     @Transactional(readOnly = false)
-    public void aggiungiFile(User user, String typefile, String file, String titolo, String descrizione)
-    {   File nuovofile = new File(user, typefile, file, titolo, descrizione);
+    public void aggiungiFile(User user, String typefile, byte[] file, String titolo, String descrizione) {
+        File nuovofile = new File(user, typefile, file, titolo, descrizione);
         fileRepository.saveAndFlush(nuovofile);
     }
 
     @Transactional(readOnly = false)
-    public void aggiungiFile(User user, String typefile, String file, String titolo)
-    {   File nuovofile = new File(user, typefile, file, titolo);
+    public void aggiungiFile(User user, String typefile, byte[] file, String titolo) {
+        File nuovofile = new File(user, typefile, file, titolo);
         fileRepository.saveAndFlush(nuovofile);
     }
 
     @Transactional(readOnly = true)
-    public List<File> trovaFilePerTipo(String tipo)
-    {   List listaRet = new ArrayList();
-        try
-        {   if(!fileRepository.existsByTypefile(tipo))
-            throw new RuntimeException("File doesn't exists!");
-        else
-        {   listaRet.add(fileRepository.findByTypefile(tipo));
-            if(!fileIndicizzatiRepository.existsByTypefile(tipo))
-                fileIndicizzatiRepository.saveAndFlush(fileRepository.findByTypefile(tipo));
-        }
-        }catch(RuntimeException e)
-        {   List<File>listaFile = fileRepository.findAll();
-            for(File f : listaFile)
-            {   if(f.getTypefile().contains(tipo))
-            {   listaFile.add(f);
-                if(!fileIndicizzatiRepository.existsByTypefile(tipo))
-                    fileIndicizzatiRepository.saveAndFlush(f);
+    public List<File> trovaFilePerTipo(String tipo) {
+        System.out.println(tipo);
+        List listaRet = new ArrayList();
+        try {
+            if (!fileRepository.existsByTypefile(tipo))
+                throw new RuntimeException("Files don't exists!");
+            else {
+                listaRet = fileRepository.findByTypefile(tipo);
+                if (!fileIndicizzatiRepository.existsByTypefile(tipo))
+                    fileIndicizzatiRepository.saveAndFlush(fileRepository.findByTypefile(tipo));
             }
+        } catch (RuntimeException e) {
+            List<File> listaFile = fileRepository.findAll();
+            for (File f : listaFile) {
+                if (f.getTypefile().contains(tipo)) {
+                    listaFile.add(f);
+                    if (!fileIndicizzatiRepository.existsById(f.getId()))
+                        fileIndicizzatiRepository.saveAndFlush(f);
+                }
             }
         }
 
@@ -73,24 +73,24 @@ public class FileService
     }
 
     @Transactional(readOnly = true)
-    public List<File> trovaFilePerTitolo(String titolo)
-    {   List listaRet = new ArrayList();
-        try
-        {   if(!fileRepository.existsByTitolo(titolo))
-            throw new RuntimeException("File doesn't exists!");
-        else
-        {   listaRet.add(fileRepository.findByTitolo(titolo));
-            if(!fileIndicizzatiRepository.existsByTitolo(titolo))
-                fileIndicizzatiRepository.saveAndFlush(fileRepository.findByTitolo(titolo));
-        }
-        }catch (RuntimeException e)
-        {   List<File>listaFile = fileRepository.findAll();
-            for(File f : listaFile)
-            {   if(f.getTitolo().contains(titolo))
-            {   listaFile.add(f);
-                if(!fileIndicizzatiRepository.existsByTitolo(titolo))
-                    fileIndicizzatiRepository.saveAndFlush(f);
+    public List<File> trovaFilePerTitolo(String titolo) {
+        List listaRet = new ArrayList();
+        try {
+            if (!fileRepository.existsByTitolo(titolo))
+                throw new RuntimeException("File doesn't exists!");
+            else {
+                listaRet = (fileRepository.findByTitolo(titolo));
+                if (!fileIndicizzatiRepository.existsByTitolo(titolo))
+                    fileIndicizzatiRepository.saveAndFlush(fileRepository.findByTitolo(titolo));
             }
+        } catch (RuntimeException e) {
+            List<File> listaFile = fileRepository.findAll();
+            for (File f : listaFile) {
+                if (f.getTitolo().contains(titolo)) {
+                    listaFile.add(f);
+                    if (!fileIndicizzatiRepository.existsById(f.getId()))
+                        fileIndicizzatiRepository.saveAndFlush(f);
+                }
             }
         }
         return listaRet;
@@ -98,32 +98,21 @@ public class FileService
 
 
     @Transactional(readOnly = true)
-    public List<User> listaPreferiti(File file)
-    {   try
-    {   if(fileRepository.findById(file.getId()).getListaUser().isEmpty())
-        throw new RuntimeException("Empty List");
-    }catch (RuntimeException e)
-    {
-        return fileRepository.findById(file.getId()).getListaUser();
-    }
-        return null;
-    }
-
-    @Transactional(readOnly = false)
-    public void aggiungiPreferito(String u, File f)
-    {   List<User> list = fileRepository.findById(f.getId()).getListaUser();
-        if(!userRepository.existsByNomeutente(u))
-            throw new RuntimeException("User non esistente");
-        list.add(userRepository.findByNomeutente(u));
-        fileRepository.findById(f.getId()).setListaUser(list);
-        fileRepository.saveAndFlush(f);
-    }
-
-    @Transactional(readOnly = false)
-    public void rimuoviPreferito(String u, File f)
-    {   List<User> list = fileRepository.findById(f.getId()).getListaUser();
-        list.remove(userRepository.findByNomeutente(u));
-        fileRepository.findById(f.getId()).setListaUser(list);
-        fileRepository.saveAndFlush(f);
+    public List<File> listaPreferiti(String username) {
+        List<File> filePref = new ArrayList<>();
+        ArrayList<File> file = (ArrayList<File>) fileRepository.findAll();
+        System.out.println(file);
+        User user = userRepository.findByNomeutente(username);
+        for (File f : file) {
+            for (User u : f.getListaUser()) {
+                System.out.println("ciao");
+                if (u.getId() == user.getId()) {
+                    filePref.add(f);
+                    System.out.println("ciaoooo");
+                    break;
+                }
+            }
+        }
+        return filePref;
     }
 }
