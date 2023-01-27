@@ -29,9 +29,15 @@ public class FileService {
     }
 
     @Transactional(readOnly = false)
-    public void aggiungiFile(File file) {
-        fileRepository.saveAndFlush(file);
-
+    public void aggiungiFile(File filePassato) {
+        File f = new File();
+        f.setId_user(filePassato.getId_user());
+        f.setTypefile(filePassato.getTypefile());
+        f.setTitolo(filePassato.getTitolo());
+        f.setFile(filePassato.getFile());
+        f.setDescrizione(filePassato.getDescrizione());
+        fileRepository.saveAndFlush(f);
+        System.out.println("eccomiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
     }
 
     @Transactional(readOnly = false)

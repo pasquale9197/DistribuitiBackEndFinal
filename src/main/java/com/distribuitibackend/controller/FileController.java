@@ -2,7 +2,6 @@ package com.distribuitibackend.controller;
 
 
 import com.distribuitibackend.Entity.File;
-import com.distribuitibackend.Entity.User;
 import com.distribuitibackend.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,9 +57,8 @@ public class FileController
             return new ResponseEntity("FIle non esistente", HttpStatus.BAD_REQUEST);
         }
     }
-
-    @PostMapping("/aggiungiFile")
-    public ResponseEntity<String> aggiungiFile(@RequestBody File file)
+    @PostMapping("/create")
+    public ResponseEntity aggiungiFile(@RequestBody File file)
     {   try
         {   fileService.aggiungiFile(file);
             return new ResponseEntity("File aggiunto", HttpStatus.OK);
