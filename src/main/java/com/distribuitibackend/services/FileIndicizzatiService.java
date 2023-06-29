@@ -21,7 +21,7 @@ public class FileIndicizzatiService
     @Transactional(readOnly = true)
     public List<File> listaFile()
     {   if(userRepository.findAll().size() == 0)
-        throw new RuntimeException("Empty list");
+            throw new RuntimeException("Empty list");
         return fileRepository.findAll();
     }
 

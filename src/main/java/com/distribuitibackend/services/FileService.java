@@ -29,15 +29,14 @@ public class FileService {
     }
 
     @Transactional(readOnly = false)
-    public void aggiungiFile(File filePassato) {
+    public void aggiungiFile(byte[] filePassato) {
         File f = new File();
-        f.setId_user(filePassato.getId_user());
-        f.setTypefile(filePassato.getTypefile());
-        f.setTitolo(filePassato.getTitolo());
-        f.setFile(filePassato.getFile());
-        f.setDescrizione(filePassato.getDescrizione());
-        fileRepository.saveAndFlush(f);
-        System.out.println("eccomiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+        f.setId_user(new User());
+        f.setTypefile("type");
+        f.setTitolo("titolo");
+        f.setFile(filePassato);
+        f.setDescrizione("descr");
+        fileRepository.save(f);
     }
 
     @Transactional(readOnly = false)
@@ -60,9 +59,8 @@ public class FileService {
             if (!fileRepository.existsByTypefile(tipo))
                 throw new RuntimeException("Files don't exists!");
             else {
-                listaRet = fileRepository.findByTypefile(tipo);
-                if (!fileIndicizzatiRepository.existsByTypefile(tipo))
-                    fileIndicizzatiRepository.saveAndFlush(fileRepository.findByTypefile(tipo));
+                    listaRet = fileRepository.findByTypefile(tipo);
+                    fileIndicizzatiRepository.deleteAll();
             }
         } catch (RuntimeException e) {
             List<File> listaFile = fileRepository.findAll();
@@ -74,20 +72,24 @@ public class FileService {
                 }
             }
         }
-
+        System.out.println(listaRet);
         return listaRet;
+    }
+
+    @Transactional(readOnly = true)
+    public File trovaFilePerId(int id)
+    {   return fileRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
     public List<File> trovaFilePerTitolo(String titolo) {
         List listaRet = new ArrayList();
-        try {
-            if (!fileRepository.existsByTitolo(titolo))
+        try
+        {   if (!fileRepository.existsByTitolo(titolo))
                 throw new RuntimeException("File doesn't exists!");
-            else {
-                listaRet = (fileRepository.findByTitolo(titolo));
-                if (!fileIndicizzatiRepository.existsByTitolo(titolo))
-                    fileIndicizzatiRepository.saveAndFlush(fileRepository.findByTitolo(titolo));
+            else
+            {   listaRet = fileRepository.findByTitolo(titolo);
+                fileIndicizzatiRepository.deleteAll();
             }
         } catch (RuntimeException e) {
             List<File> listaFile = fileRepository.findAll();
@@ -99,6 +101,7 @@ public class FileService {
                 }
             }
         }
+        System.out.println(listaRet);
         return listaRet;
     }
 

@@ -1,7 +1,6 @@
 package com.distribuitibackend.Entity;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +22,7 @@ public class File
     @Column(name = "typefile")
     private String typefile;
 
-    @Lob
+    @Basic
     @Column(name = "file")
     private byte[] file;
 
@@ -89,8 +88,8 @@ public class File
         this.id = id;
     }
 
-    public User getId_user() {
-        return id_user;
+    public int getId_user() {
+        return (int) id_user.getId();
     }
 
     public void setId_user(User id_user) {
